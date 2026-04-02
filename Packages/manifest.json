@@ -2,7 +2,8 @@
   "dependencies": {
     "com.unity.collab-proxy": "2.11.4",
     "com.unity.feature.development": "1.0.1",
-    "com.unity.pico.livepreview": "file:I:/gameproject/MyPackage/Unity Live Preview Plugin-1.0.5-20250211",
+    "com.unity.pico.livepreview": "file:../LocalPackages/Unity Live Preview Plugin-1.0.5-20250211",
+    "com.unity.postprocessing": "3.4.0",
     "com.unity.shadergraph": "14.0.11",
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.timeline": "1.7.6",
@@ -11,7 +12,7 @@
     "com.unity.xr.interaction.toolkit": "3.4.0",
     "com.unity.xr.management": "4.5.4",
     "com.unity.xr.openxr": "1.13.2",
-    "com.unity.xr.picoxr": "file:I:/gameproject/MyPackage/PICO Unity Integration SDK-3.4.0-20260226",
+    "com.unity.xr.picoxr": "file:../LocalPackages/PICO Unity Integration SDK-3.4.0-20260226",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

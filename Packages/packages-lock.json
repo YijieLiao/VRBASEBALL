@@ -84,13 +84,22 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.pico.livepreview": {
-      "version": "file:I:/gameproject/MyPackage/Unity Live Preview Plugin-1.0.5-20250211",
+      "version": "file:../LocalPackages/Unity Live Preview Plugin-1.0.5-20250211",
       "depth": 0,
       "source": "local",
       "dependencies": {
         "com.unity.xr.management": "4.0.0",
         "com.unity.xr.interaction.toolkit": "2.0.0"
       }
+    },
+    "com.unity.postprocessing": {
+      "version": "3.4.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.physics": "1.0.0"
+      },
+      "url": "https://packages.unity.cn"
     },
     "com.unity.render-pipelines.core": {
       "version": "14.0.11",
@@ -247,7 +256,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.xr.picoxr": {
-      "version": "file:I:/gameproject/MyPackage/PICO Unity Integration SDK-3.4.0-20260226",
+      "version": "file:../LocalPackages/PICO Unity Integration SDK-3.4.0-20260226",
       "depth": 0,
       "source": "local",
       "dependencies": {
