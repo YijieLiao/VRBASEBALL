@@ -9561,7 +9561,7 @@ GameObject:
   - component: {fileID: 1596858651}
   - component: {fileID: 1596858650}
   m_Layer: 5
-  m_Name: SRTTINGSCanvas
+  m_Name: SETTINGSCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
