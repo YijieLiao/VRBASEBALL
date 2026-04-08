@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/__Animals自制/textures/红色数字.png.meta
 guid: c039beb17dadb2b448db3406b96dd872
+========
+guid: ff0cdf956f39044488f3a6040a18e792
+>>>>>>>> 72b69d86fdf3eef65d8e85816974ea3957b17cff:Assets/Asset_Room/Materials/Room_texture.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

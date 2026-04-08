@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/__Animals自制/textures/蓝色数字.png.meta
 guid: 16ed9ad9a0f372f4e853a72af456c3c9
+========
+guid: a1ccdc29d4947704492c460d49f278e9
+>>>>>>>> 72b69d86fdf3eef65d8e85816974ea3957b17cff:Assets/_独立Sprites/tank_explosion1.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

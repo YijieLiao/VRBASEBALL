@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Animals.meta
 guid: dc57536ef6e5c754c8c30f388aa8ae95
+========
+guid: 69fc67caa0b9884488c1f9b8222d8c5b
+>>>>>>>> 72b69d86fdf3eef65d8e85816974ea3957b17cff:Assets/Asset_Room/Materials.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

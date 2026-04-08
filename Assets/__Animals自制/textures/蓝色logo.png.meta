@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/__Animals自制/textures/蓝色logo.png.meta
 guid: 90110b253a5b36a40bf0930cd8f0c075
+========
+guid: baaa23d0f054ea04c85dd0460066d872
+>>>>>>>> 72b69d86fdf3eef65d8e85816974ea3957b17cff:Assets/_独立Sprites/LOGO.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
