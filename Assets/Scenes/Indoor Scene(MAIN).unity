@@ -8988,7 +8988,12 @@ MonoBehaviour:
   currentPack: {fileID: 11400000, guid: bcf7e782c93f8f74db05d7a94f66118f, type: 2}
   number: 1
   jerseyRenderer: {fileID: 1472694907}
-  hatRenderer: {fileID: 0}
+  hatRenderer: {fileID: 1472694909}
+--- !u!23 &1472694909 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8289493713684996241, guid: 10a7bca37818d204baa3bfbe2cb89432, type: 3}
+  m_PrefabInstance: {fileID: 1472694904}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1474064348
 GameObject:
   m_ObjectHideFlags: 0
