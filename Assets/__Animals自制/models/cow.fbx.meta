@@ -1,9 +1,29 @@
 fileFormatVersion: 2
-guid: d386ed18b4a04f74e9fab2d321d94f08
+guid: 27a774c8f46a5e043a10fdc9ac342aea
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Cow
+    second: {fileID: 2100000, guid: b409558e56a3ef3498174333fb98dc7a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blue
+    second: {fileID: 2100000, guid: c3533c8610cbfd2448080be0da67a2e9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bluelogo.004
+    second: {fileID: 2100000, guid: bc5fa847077aacd43ac3cfea7b79ef98, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bluenum.004
+    second: {fileID: 2100000, guid: f8bf08cee082e1749acb28ee517544c2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -95,7 +115,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: c45d1f8012a52b043a37e281472f822d, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 677222d2d106c0549a2b52295d1a6063, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1

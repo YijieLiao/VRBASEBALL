@@ -1,29 +1,9 @@
 fileFormatVersion: 2
-guid: 90375fa025f94df499c74fd224e3c60c
+guid: fe751733c9f37f54499fbe05cec9e4ee
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Cow
-    second: {fileID: 2100000, guid: b409558e56a3ef3498174333fb98dc7a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: blue
-    second: {fileID: 2100000, guid: c3533c8610cbfd2448080be0da67a2e9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bluelogo.004
-    second: {fileID: 2100000, guid: bc5fa847077aacd43ac3cfea7b79ef98, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: bluenum.004
-    second: {fileID: 2100000, guid: f8bf08cee082e1749acb28ee517544c2, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
