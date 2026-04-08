@@ -1,15 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!1045 &1
-EditorBuildSettings:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Samples/XR Interaction Toolkit/3.4.0/Starter Assets/DemoScene.unity
-    guid: 319dafa5c80f29f428dc1e0d03f04177
-  m_configObjects:
-    Unity.XR.PICO.LivePreview.Settings: {fileID: 11400000, guid: a89c6fedf24887a43b90b8980a67369b, type: 2}
-    Unity.XR.PXR.Settings: {fileID: 11400000, guid: 29ab006154d2d5141928e94aaa6122bd, type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 3d41f1483a0e80145b6465094802e163, type: 2}
-    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 0948f8f928a05f84ea7e0de84c5624e2, type: 2}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3923c9b8f25d9a95513d0c0dae2da1cea34ee3bf7d2b22f7171c386652d8b5d9
+size 716
