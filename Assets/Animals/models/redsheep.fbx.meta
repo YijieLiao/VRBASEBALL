@@ -1,9 +1,29 @@
 fileFormatVersion: 2
-guid: d5c6cd96b89b3094598835ddc9de1d6c
+guid: d386ed18b4a04f74e9fab2d321d94f08
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Sheep
+    second: {fileID: 2100000, guid: ec6da5de964faa8479633f249dc73183, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: red
+    second: {fileID: 2100000, guid: 4c0bee38bf32064489ac40309028bb27, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: redlogo.004
+    second: {fileID: 2100000, guid: 1b1f8876933f1ef4994517e5fa51f922, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rednum.004
+    second: {fileID: 2100000, guid: 9d8fc029178df254a865e4b9c3118349, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -95,7 +115,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 677222d2d106c0549a2b52295d1a6063, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: c45d1f8012a52b043a37e281472f822d, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1

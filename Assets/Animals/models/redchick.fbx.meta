@@ -1,9 +1,34 @@
 fileFormatVersion: 2
-guid: c5a64173e05867541b116c3ea145db3b
+guid: 10a7bca37818d204baa3bfbe2cb89432
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Chick.001
+    second: {fileID: 2100000, guid: ccddf148f77566845b1d6acb75e8cc76, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: red.001
+    second: {fileID: 2100000, guid: 4c0bee38bf32064489ac40309028bb27, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: red.002
+    second: {fileID: 2100000, guid: 4c0bee38bf32064489ac40309028bb27, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: redlogo.001
+    second: {fileID: 2100000, guid: 1b1f8876933f1ef4994517e5fa51f922, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rednum.001
+    second: {fileID: 2100000, guid: 9d8fc029178df254a865e4b9c3118349, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
