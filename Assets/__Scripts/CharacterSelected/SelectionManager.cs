@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 
-public class VRSelectionManager : MonoBehaviour
+public class SelectionManager : MonoBehaviour
 {
     [Header("3D 配置")]
     public float flyHeight = 0.4f;
