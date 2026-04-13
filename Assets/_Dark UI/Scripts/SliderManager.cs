@@ -19,12 +19,12 @@ namespace Michsky.UI.Dark
         public bool showValue = true;
         public bool useRoundValue = false;
 
-        private Slider mainSlider;
+        private XRSlider mainSlider;
         float saveValue;
 
         void Start()
         {
-            mainSlider = this.GetComponent<Slider>();
+            mainSlider = this.GetComponent<XRSlider>();
 
             if (showValue == false)
                 valueText.enabled = false;
@@ -63,7 +63,12 @@ namespace Michsky.UI.Dark
                     valueText.text = mainSlider.value.ToString("F1") + "%";
 
                 else
+                {
                     valueText.text = mainSlider.value.ToString("F1");
+                    Debug.Log($"mainSlider: {mainSlider != null}, valueText: {valueText != null}", gameObject);
+                }
+                    
+
             }
         }
     }
