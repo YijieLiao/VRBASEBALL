@@ -95,7 +95,7 @@ public class MicroPitcher : MonoBehaviour
         transform.rotation = launchPoint.rotation;
     }
 
-    private void PitchBall()
+    public void PitchBall()
     {
         if (launchPoint == null || targetPoint == null) return;
 

@@ -2,6 +2,10 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using Unity.XR.PXR;
+using System.Text;
+using UnityEngine.XR;
+using System.Collections.Generic;
 
 public class VRSelectionManagerPoke: MonoBehaviour
 {
@@ -59,32 +63,13 @@ public class VRSelectionManagerPoke: MonoBehaviour
         }
     }
 
-    // 震动无效
     private void TriggerHaptic(IXRHoverInteractor interactor)
     {
-        // 1. 尝试直接从 Interactor 所在的物体或其父物体获取 Controller 组件
-        // 这在 Near-Far Interactor 结构中是最有效的，因为它通常挂在 Controller 下面
-        var controller = (interactor as MonoBehaviour).GetComponentInParent<ActionBasedController>();
-
+        // 基础震动：使用 XRI 标准接口（PICO 会自动转换）
+        var controller = (interactor as MonoBehaviour)?.GetComponentInParent<ActionBasedController>();
         if (controller != null)
         {
-            // 调用 XRI 标准接口，底层会自动调用 PXR_Input.SetControllerVibration
-            controller.SendHapticImpulse(0.3f, 0.1f);
-        }
-        else
-        {
-            // 2. 备选方案：尝试从 Input Interactor 获取内部引用
-            if (interactor is XRBaseInputInteractor inputInteractor && inputInteractor.xrController != null)
-            {
-                inputInteractor.xrController.SendHapticImpulse(0.3f, 0.1f);
-            }
-            else
-            {
-                // 3. 终极保底：如果是 Pico 专用环境，可以直接调用你引用的那个 API
-                // 但需要判断是左手还是右手
-                // PXR_Input.SetControllerVibration(strength, time, controllerID);
-                Debug.LogWarning("无法自动定位控制器，请检查手柄层级是否包含 ActionBasedController");
-            }
+            controller.SendHapticImpulse(0.5f, 0.1f);
         }
     }
 
@@ -290,5 +275,19 @@ public class VRSelectionManagerPoke: MonoBehaviour
         if (anim != null) anim.SetBool("isFlying", false);
         DOTween.Kill(CHICK_FLIGHT_ID);
         chick.transform.DOMoveY(chickHomeY, animDuration).SetEase(Ease.InQuad);
+    }
+
+    // 辅助方法：获取 Transform 的层级路径
+    private string GetHierarchyPath(Transform transform)
+    {
+        StringBuilder sb = new StringBuilder(transform.name);
+        Transform parent = transform.parent;
+        while (parent != null)
+        {
+            sb.Insert(0, "/");
+            sb.Insert(0, parent.name);
+            parent = parent.parent;
+        }
+        return sb.ToString();
     }
 }

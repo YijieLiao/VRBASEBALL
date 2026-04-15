@@ -65,7 +65,7 @@ namespace Michsky.UI.Dark
                 else
                 {
                     valueText.text = mainSlider.value.ToString("F1");
-                    Debug.Log($"mainSlider: {mainSlider != null}, valueText: {valueText != null}", gameObject);
+                    //Debug.Log($"mainSlider: {mainSlider != null}, valueText: {valueText != null}", gameObject);
                 }
                     
 
