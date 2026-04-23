@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
+[DisallowMultipleComponent]
 public class BatCapsule : MonoBehaviour
 {
     [SerializeField] private BatCapsuleFollower _batCapsuleFollowerPrefab;
+
+    private BatCapsuleFollower _spawnedFollower;
 
     private void Start()
     {
@@ -11,9 +14,16 @@ public class BatCapsule : MonoBehaviour
 
     private void SpawnBatCapsuleFollower()
     {
-        // 实例化跟随者并设置初始位置和目标
-        var follower = Instantiate(_batCapsuleFollowerPrefab);
-        follower.transform.position = transform.position;
-        follower.SetFollowTarget(this);
+        if (_spawnedFollower != null)
+            return;
+
+        if (_batCapsuleFollowerPrefab == null)
+        {
+            Debug.LogError($"{nameof(BatCapsule)} on {name} is missing {nameof(_batCapsuleFollowerPrefab)}.", this);
+            return;
+        }
+
+        _spawnedFollower = Instantiate(_batCapsuleFollowerPrefab, transform.position, transform.rotation);
+        _spawnedFollower.SetFollowTarget(this);
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.XR.CoreUtils;
 
 /// <summary>
 /// 黑屏淡入淡出 + XR Origin 位置切换
@@ -44,6 +45,13 @@ public class ViewTransitionManager : MonoBehaviour
     [Tooltip("需要同步渐隐的 Canvas 列表\n留空则自动查找场景中所有 World Space Canvas")]
     public Canvas[] canvasesToFade;
 
+    [Header("Camera Y Offset")]
+    [Tooltip("房间视角使用的 XR Origin Camera Y Offset")]
+    public float roomCameraYOffset = 0f;
+
+    [Tooltip("击球视角使用的 XR Origin Camera Y Offset")]
+    public float battingCameraYOffset = -0.3f;
+
     [Header("高级设置")]
     [Tooltip("勾选 = 锚点代表相机位置（眼睛在哪）\n不勾选 = 锚点代表脚底位置")]
     public bool anchorRepresentsCameraPosition = false;
@@ -53,6 +61,7 @@ public class ViewTransitionManager : MonoBehaviour
 
     private MeshRenderer _fadeMeshRenderer;
     private Material _fadeMaterial;
+    private XROrigin _xrOriginComponent;
 
     void Awake()
     {
@@ -91,6 +100,7 @@ public class ViewTransitionManager : MonoBehaviour
         if (runtimeCamera != null)
             xrCamera = runtimeCamera;
 
+        CacheRigComponents();
         RebuildFadeOverlay();
         SetFadeAlpha(0f);
     }
@@ -176,8 +186,14 @@ public class ViewTransitionManager : MonoBehaviour
             xrCamera = Camera.main;
 
         bool resolved = xrOrigin != null && xrCamera != null;
-        if (resolved && (xrOrigin != previousOrigin || xrCamera != previousCamera))
-            RebuildFadeOverlay();
+        if (resolved)
+        {
+            if (xrOrigin != previousOrigin || xrCamera != previousCamera || _xrOriginComponent == null)
+            {
+                CacheRigComponents();
+                RebuildFadeOverlay();
+            }
+        }
 
         return resolved;
     }
@@ -321,24 +337,35 @@ public class ViewTransitionManager : MonoBehaviour
 
     #region 位置切换
 
+    private void CacheRigComponents()
+    {
+        _xrOriginComponent = xrOrigin != null ? xrOrigin.GetComponent<XROrigin>() : null;
+    }
+
     private void MoveXROrigin(ViewMode target)
     {
         Transform anchor = target == ViewMode.Room ? roomAnchor : battingAnchor;
         if (xrOrigin == null || anchor == null) return;
 
+        ApplyCameraYOffset(target);
         xrOrigin.rotation = anchor.rotation;
 
-        if (anchorRepresentsCameraPosition)
-        {
-            Vector3 camLocal = xrCamera.transform.localPosition;
-            xrOrigin.position = anchor.position - xrOrigin.TransformVector(camLocal);
-        }
-        else
-        {
-            Vector3 headOffset = xrCamera.transform.localPosition;
-            headOffset.y = 0f;
-            xrOrigin.position = anchor.position - xrOrigin.TransformVector(headOffset);
-        }
+        Vector3 cameraLocal = xrCamera.transform.localPosition;
+        if (!anchorRepresentsCameraPosition)
+            cameraLocal.y = 0f;
+
+        xrOrigin.position = anchor.position - xrOrigin.TransformVector(cameraLocal);
+    }
+
+    private void ApplyCameraYOffset(ViewMode target)
+    {
+        if (_xrOriginComponent == null)
+            CacheRigComponents();
+
+        if (_xrOriginComponent == null)
+            return;
+
+        _xrOriginComponent.CameraYOffset = target == ViewMode.Room ? roomCameraYOffset : battingCameraYOffset;
     }
 
     #endregion

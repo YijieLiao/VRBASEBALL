@@ -98,7 +98,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1890ec9f900fa140ab869f675fd2fdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sensitivity: 100
+  positionFollowGain: 45
+  maxLinearSpeed: 12
+  positionDeadZone: 0.01
+  teleportDistance: 0.35
+  rotationFollowGain: 25
+  maxAngularSpeed: 30
+  rotationDeadZoneDegrees: 2
+  snapRotationDegrees: 50
 --- !u!54 &5792163780745722778
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -138,4 +145,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37afe253f4606bb49966c0decf05eea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 20
+  maxVelocity: 12
