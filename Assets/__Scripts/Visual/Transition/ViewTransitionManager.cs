@@ -59,9 +59,10 @@ public class ViewTransitionManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        if (xrCamera == null) xrCamera = Camera.main;
+        if (!ResolveRuntimeReferences())
+            return;
 
-        CreateFadeOverlay();
+        RebuildFadeOverlay();
         SetFadeAlpha(0f);
     }
 
@@ -84,14 +85,26 @@ public class ViewTransitionManager : MonoBehaviour
         TransitionTo(CurrentMode == ViewMode.Room ? ViewMode.Batting : ViewMode.Room);
     }
 
+    public void BindRuntimeRig(Transform runtimeOrigin, Camera runtimeCamera)
+    {
+        xrOrigin = runtimeOrigin;
+        if (runtimeCamera != null)
+            xrCamera = runtimeCamera;
+
+        RebuildFadeOverlay();
+        SetFadeAlpha(0f);
+    }
+
     public void TransitionTo(ViewMode target)
     {
+        if (!ResolveRuntimeReferences()) return;
         if (IsTransitioning || target == CurrentMode) return;
         StartCoroutine(ExecuteTransition(target));
     }
 
     public void TeleportImmediate(ViewMode target)
     {
+        if (!ResolveRuntimeReferences()) return;
         if (IsTransitioning) return;
         MoveXROrigin(target);
         CurrentMode = target;
@@ -142,6 +155,31 @@ public class ViewTransitionManager : MonoBehaviour
         }
 
         IsTransitioning = false;
+    }
+
+    private bool ResolveRuntimeReferences()
+    {
+        Transform previousOrigin = xrOrigin;
+        Camera previousCamera = xrCamera;
+
+        if (xrOrigin == null || !xrOrigin.gameObject.activeInHierarchy)
+        {
+            GameObject originObject = GameObject.Find("XR Origin");
+            if (originObject != null && originObject.activeInHierarchy)
+                xrOrigin = originObject.transform;
+        }
+
+        if ((xrCamera == null || !xrCamera.gameObject.activeInHierarchy) && xrOrigin != null)
+            xrCamera = xrOrigin.GetComponentInChildren<Camera>(true);
+
+        if (xrCamera == null)
+            xrCamera = Camera.main;
+
+        bool resolved = xrOrigin != null && xrCamera != null;
+        if (resolved && (xrOrigin != previousOrigin || xrCamera != previousCamera))
+            RebuildFadeOverlay();
+
+        return resolved;
     }
 
     #region Canvas 淡出处理（参考 SelectionManager）
@@ -318,6 +356,24 @@ public class ViewTransitionManager : MonoBehaviour
     #endregion
 
     #region 遮罩球体
+
+    private void RebuildFadeOverlay()
+    {
+        if (xrCamera == null)
+            return;
+
+        Transform existing = xrCamera.transform.Find("_ScreenFadeOverlay");
+        if (existing != null)
+            Destroy(existing.gameObject);
+
+        if (_fadeMaterial != null)
+        {
+            Destroy(_fadeMaterial);
+            _fadeMaterial = null;
+        }
+
+        CreateFadeOverlay();
+    }
 
     private void CreateFadeOverlay()
     {
