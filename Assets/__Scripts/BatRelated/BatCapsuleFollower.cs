@@ -19,6 +19,8 @@ public class BatCapsuleFollower : MonoBehaviour
     private BatCapsule _followTarget;
     private Rigidbody _rigidbody;
 
+    public Vector3 CurrentVelocity { get; private set; }
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -68,18 +70,21 @@ public class BatCapsuleFollower : MonoBehaviour
         if (distance >= teleportDistance)
         {
             _rigidbody.position = _followTarget.transform.position;
-            _rigidbody.velocity = Vector3.zero;
+            CurrentVelocity = Vector3.zero;
+            _rigidbody.velocity = CurrentVelocity;
             return;
         }
 
         if (distance <= positionDeadZone)
         {
-            _rigidbody.velocity = Vector3.zero;
+            CurrentVelocity = Vector3.zero;
+            _rigidbody.velocity = CurrentVelocity;
             return;
         }
 
         Vector3 desiredVelocity = positionDelta * positionFollowGain;
-        _rigidbody.velocity = Vector3.ClampMagnitude(desiredVelocity, maxLinearSpeed);
+        CurrentVelocity = Vector3.ClampMagnitude(desiredVelocity, maxLinearSpeed);
+        _rigidbody.velocity = CurrentVelocity;
     }
 
     private void FollowRotation()
@@ -117,7 +122,8 @@ public class BatCapsuleFollower : MonoBehaviour
 
     private void StopMotion()
     {
-        _rigidbody.velocity = Vector3.zero;
+        CurrentVelocity = Vector3.zero;
+        _rigidbody.velocity = CurrentVelocity;
         _rigidbody.angularVelocity = Vector3.zero;
     }
 }

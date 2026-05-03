@@ -10,6 +10,17 @@ public class BatCapsule : MonoBehaviour
     private void Start()
     {
         SpawnBatCapsuleFollower();
+        ApplyFollowerActiveState();
+    }
+
+    private void OnEnable()
+    {
+        ApplyFollowerActiveState();
+    }
+
+    private void OnDisable()
+    {
+        ApplyFollowerActiveState();
     }
 
     private void SpawnBatCapsuleFollower()
@@ -25,5 +36,11 @@ public class BatCapsule : MonoBehaviour
 
         _spawnedFollower = Instantiate(_batCapsuleFollowerPrefab, transform.position, transform.rotation);
         _spawnedFollower.SetFollowTarget(this);
+    }
+
+    private void ApplyFollowerActiveState()
+    {
+        if (_spawnedFollower != null)
+            _spawnedFollower.gameObject.SetActive(isActiveAndEnabled);
     }
 }

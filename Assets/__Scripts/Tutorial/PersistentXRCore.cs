@@ -43,11 +43,7 @@ public class PersistentXRCore : MonoBehaviour
 
         ViewTransitionManager[] managers = FindObjectsOfType<ViewTransitionManager>(true);
         for (int i = 0; i < managers.Length; i++)
-        {
-            managers[i].xrOrigin = persistentXrOrigin;
-            if (persistentCamera != null)
-                managers[i].xrCamera = persistentCamera;
-        }
+            managers[i].BindRuntimeRig(persistentXrOrigin, persistentCamera);
     }
 
     private static void RebindInteractionManagers(XRInteractionManager persistentInteractionManager)

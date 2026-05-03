@@ -52,6 +52,13 @@ public class ViewTransitionManager : MonoBehaviour
     [Tooltip("击球视角使用的 XR Origin Camera Y Offset")]
     public float battingCameraYOffset = -0.3f;
 
+    [Header("视角对象")]
+    [Tooltip("只在击球视角显示的对象。可手动拖引用，也可由下方名称从当前 XR Origin 子节点自动查找")]
+    public GameObject[] battingOnlyObjects;
+
+    [Tooltip("从当前 XR Origin 子节点自动查找的击球视角对象名称")]
+    public string[] battingOnlyObjectNames = { "Baseball Bat" };
+
     [Header("高级设置")]
     [Tooltip("勾选 = 锚点代表相机位置（眼睛在哪）\n不勾选 = 锚点代表脚底位置")]
     public bool anchorRepresentsCameraPosition = false;
@@ -67,6 +74,7 @@ public class ViewTransitionManager : MonoBehaviour
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+        ApplyViewObjectVisibility(CurrentMode);
 
         if (!ResolveRuntimeReferences())
             return;
@@ -101,6 +109,8 @@ public class ViewTransitionManager : MonoBehaviour
             xrCamera = runtimeCamera;
 
         CacheRigComponents();
+        ResolveBattingOnlyObjects();
+        ApplyViewObjectVisibility(CurrentMode);
         RebuildFadeOverlay();
         SetFadeAlpha(0f);
     }
@@ -117,6 +127,7 @@ public class ViewTransitionManager : MonoBehaviour
         if (!ResolveRuntimeReferences()) return;
         if (IsTransitioning) return;
         MoveXROrigin(target);
+        ApplyViewObjectVisibility(target);
         CurrentMode = target;
     }
 
@@ -146,6 +157,7 @@ public class ViewTransitionManager : MonoBehaviour
 
         // 阶段 2：移动位置（此时全黑，Canvas 已隐藏）
         MoveXROrigin(target);
+        ApplyViewObjectVisibility(target);
         CurrentMode = target;
 
         if (blackScreenDelay > 0f)
@@ -191,6 +203,8 @@ public class ViewTransitionManager : MonoBehaviour
             if (xrOrigin != previousOrigin || xrCamera != previousCamera || _xrOriginComponent == null)
             {
                 CacheRigComponents();
+                ResolveBattingOnlyObjects();
+                ApplyViewObjectVisibility(CurrentMode);
                 RebuildFadeOverlay();
             }
         }
@@ -336,6 +350,114 @@ public class ViewTransitionManager : MonoBehaviour
     #endregion
 
     #region 位置切换
+
+    private void ApplyViewObjectVisibility(ViewMode target)
+    {
+        ResolveBattingOnlyObjects();
+
+        bool showBattingObjects = target == ViewMode.Batting;
+        if (battingOnlyObjects == null)
+            return;
+
+        foreach (GameObject obj in battingOnlyObjects)
+        {
+            if (obj != null)
+                obj.SetActive(showBattingObjects);
+        }
+    }
+
+    private void ResolveBattingOnlyObjects()
+    {
+        if (xrOrigin == null)
+            return;
+
+        var objects = new List<GameObject>();
+        PreserveExistingBattingOnlyObjects(objects);
+        ResolveNamedBattingOnlyObjects(objects);
+
+        battingOnlyObjects = objects.ToArray();
+    }
+
+    private void PreserveExistingBattingOnlyObjects(List<GameObject> objects)
+    {
+        if (battingOnlyObjects == null)
+            return;
+
+        foreach (GameObject obj in battingOnlyObjects)
+        {
+            if (obj == null)
+                continue;
+
+            if (IsConfiguredBattingOnlyName(obj.name) && !IsChildOf(obj.transform, xrOrigin))
+                continue;
+
+            AddUnique(objects, obj);
+        }
+    }
+
+    private void ResolveNamedBattingOnlyObjects(List<GameObject> objects)
+    {
+        if (battingOnlyObjectNames == null)
+            return;
+
+        foreach (string objectName in battingOnlyObjectNames)
+        {
+            if (string.IsNullOrWhiteSpace(objectName))
+                continue;
+
+            Transform child = FindChildRecursive(xrOrigin, objectName);
+            if (child != null)
+                AddUnique(objects, child.gameObject);
+        }
+    }
+
+    private bool IsConfiguredBattingOnlyName(string objectName)
+    {
+        if (battingOnlyObjectNames == null)
+            return false;
+
+        foreach (string configuredName in battingOnlyObjectNames)
+        {
+            if (!string.IsNullOrWhiteSpace(configuredName) && objectName == configuredName)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool IsChildOf(Transform child, Transform parent)
+    {
+        while (child != null)
+        {
+            if (child == parent)
+                return true;
+
+            child = child.parent;
+        }
+
+        return false;
+    }
+
+    private void AddUnique(List<GameObject> objects, GameObject obj)
+    {
+        if (!objects.Contains(obj))
+            objects.Add(obj);
+    }
+
+    private Transform FindChildRecursive(Transform root, string childName)
+    {
+        if (root.name == childName)
+            return root;
+
+        for (int i = 0; i < root.childCount; i++)
+        {
+            Transform found = FindChildRecursive(root.GetChild(i), childName);
+            if (found != null)
+                return found;
+        }
+
+        return null;
+    }
 
     private void CacheRigComponents()
     {
