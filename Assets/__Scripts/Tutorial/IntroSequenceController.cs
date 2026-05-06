@@ -103,6 +103,9 @@ public class IntroSequenceController : MonoBehaviour
     public float finalSubtitleGapDuration = 0.25f;
     public string gameplaySceneName = "Indoor Scene(0.3）";
 
+    [Header("脚下标志")]
+    public CanvasGroupFader footMarker;
+
     [Header("自动播放")]
     public bool playOnStart = true;
 
@@ -151,6 +154,7 @@ public class IntroSequenceController : MonoBehaviour
             return;
 
         hasPlayed = true;
+        if (footMarker != null) footMarker.FadeOut();
         introSequenceCoroutine = StartCoroutine(PlayIntroRoutine());
     }
 
@@ -172,6 +176,7 @@ public class IntroSequenceController : MonoBehaviour
         leftSecondaryButtonWasPressed = false;
         CurrentStage = GuideStage.Idle;
         HideAllImmediate();
+        if (footMarker != null) footMarker.FadeIn();
         Play();
     }
 
@@ -254,6 +259,7 @@ public class IntroSequenceController : MonoBehaviour
         StopAllCoroutines();
         introSequenceCoroutine = null;
         HideAllImmediate();
+        if (footMarker != null) footMarker.SetImmediate(false);
         CurrentStage = GuideStage.Completed;
         SceneTransitionFader.Instance.FadeToBlackThenLoad(gameplaySceneName);
     }

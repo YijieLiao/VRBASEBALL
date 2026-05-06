@@ -66,6 +66,7 @@ public class Pitcher : MonoBehaviour
     private Rigidbody rb;
     private TrailRenderer[] trailRenderers;
     private bool isPitching = false;
+    public bool IsInFlight => isPitching;
     private Vector3 customGravity;
     private float lastBatHitTime = -999f;
 
@@ -157,6 +158,23 @@ public class Pitcher : MonoBehaviour
         ClearTrails();
     }
 
+    public void Repitch()
+    {
+        if (repitchCooldown) return;
+        StartCoroutine(RepitchRoutine());
+    }
+
+    private bool repitchCooldown;
+
+    private System.Collections.IEnumerator RepitchRoutine()
+    {
+        repitchCooldown = true;
+        ResetBall();
+        yield return null;
+        PitchBall();
+        repitchCooldown = false;
+    }
+
     private void ClearTrails()
     {
         if (trailRenderers == null)
@@ -193,6 +211,14 @@ public class Pitcher : MonoBehaviour
         Vector3 velocityY = new Vector3(0, velocityYVal, 0);
 
         rb.velocity = velocityXZ + velocityY;
+    }
+
+    public void PitchWithSpeed(float customFlightTime)
+    {
+        float original = flightTime;
+        flightTime = customFlightTime;
+        PitchBall();
+        flightTime = original;
     }
 
     private void ApplyBatHit(Collision collision)

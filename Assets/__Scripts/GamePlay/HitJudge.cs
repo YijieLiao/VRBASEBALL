@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public enum HitResult
@@ -46,6 +46,10 @@ public class HitJudge : MonoBehaviour
     private Vector3 homePosition;
     private Vector3 fieldForward;
     private bool hasHit;
+
+    [field: SerializeField]
+    public float LastHitDistance { get; private set; }
+    public bool HasActiveHit => hasHit;
 
     private void Start()
     {
@@ -111,6 +115,7 @@ public class HitJudge : MonoBehaviour
         toLanding.y = 0f;
 
         float distance = toLanding.magnitude;
+        LastHitDistance = distance;
         if (distance < fairLandingMinDistance)
             return HitResult.None;
 
