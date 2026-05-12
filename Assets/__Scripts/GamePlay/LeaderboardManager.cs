@@ -72,7 +72,7 @@ public class LeaderboardManager : MonoBehaviour
             playerName = playerName,
             animalName = animalName,
             score = score,
-            date = DateTime.Now.ToString("yyyy-MM-dd")
+            date = DateTime.Now.ToString("MM-dd")
         };
 
         // 按分数降序插入
@@ -119,6 +119,13 @@ public class LeaderboardManager : MonoBehaviour
         {
             Debug.LogWarning($"[LeaderboardManager] Failed to save: {e.Message}");
         }
+    }
+
+    public void ClearAllEntries()
+    {
+        data = new LeaderboardData();
+        Save();
+        Debug.Log("[LeaderboardManager] All entries cleared.");
     }
 
 #if UNITY_EDITOR

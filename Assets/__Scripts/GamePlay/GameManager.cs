@@ -46,11 +46,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ResolveReferences();
+        if (roundManager != null)
+            roundManager.OnRoundEnded += OnRoundEnded;
         EnterState(currentState);
     }
 
     void OnDestroy()
     {
+        if (roundManager != null)
+            roundManager.OnRoundEnded -= OnRoundEnded;
         if (Instance == this) Instance = null;
     }
 
