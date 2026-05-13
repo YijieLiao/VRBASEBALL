@@ -52,6 +52,11 @@ public class ViewTransitionManager : MonoBehaviour
     [Tooltip("击球视角使用的 XR Origin Camera Y Offset")]
     public float battingCameraYOffset = -0.3f;
 
+    [Header("旋转补偿")]
+    [Tooltip("Pico 手柄追踪偏转补偿（Y轴旋转角度）。传送到新锚点后额外叠加此旋转。默认 0。")]
+    [Range(-180f, 180f)]
+    public float rotationCompensation = 0f;
+
     [Header("视角对象")]
     [Tooltip("只在击球视角显示的对象。可手动拖引用，也可由下方名称从当前 XR Origin 子节点自动查找")]
     public GameObject[] battingOnlyObjects;
@@ -470,7 +475,7 @@ public class ViewTransitionManager : MonoBehaviour
         if (xrOrigin == null || anchor == null) return;
 
         ApplyCameraYOffset(target);
-        xrOrigin.rotation = anchor.rotation;
+        xrOrigin.rotation = anchor.rotation * Quaternion.Euler(0f, rotationCompensation, 0f);
 
         Vector3 cameraLocal = xrCamera.transform.localPosition;
         if (!anchorRepresentsCameraPosition)
