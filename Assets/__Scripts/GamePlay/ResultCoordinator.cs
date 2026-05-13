@@ -26,11 +26,11 @@ public class ResultCoordinator : MonoBehaviour
         if (nameInputPanel != null)
             nameInputPanel.OnNameConfirmed += OnNameConfirmed;
 
-        // 接上 GameManager 的结算事件（无需 Inspector 连线）
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.OnShowResult += ShowResult;
-
-        HideAll();
+            GameManager.Instance.OnStateChanged += OnGameStateChanged;
+        }
     }
 
     void OnDestroy()
@@ -38,14 +38,31 @@ public class ResultCoordinator : MonoBehaviour
         if (nameInputPanel != null)
             nameInputPanel.OnNameConfirmed -= OnNameConfirmed;
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.OnShowResult -= ShowResult;
+            GameManager.Instance.OnStateChanged -= OnGameStateChanged;
+        }
         if (Instance == this) Instance = null;
+    }
+
+    void OnGameStateChanged(GameState from, GameState to)
+    {
+        // 离开 Result 状态时自动关闭面板
+        if (from == GameState.Result && to != GameState.Result)
+            HideAll();
     }
 
     /// <summary>外部调用，传入最终总分</summary>
     public void ShowResult(int totalScore)
     {
         currentScore = totalScore;
+
+        if (nameInputPanel == null || leaderboardPanel == null)
+        {
+            Debug.LogWarning($"[ResultCoordinator] 面板未连线！NameInputPanel={(nameInputPanel != null ? "OK" : "NULL")}, LeaderboardPanel={(leaderboardPanel != null ? "OK" : "NULL")}");
+            return;
+        }
+
         bool isHighScore = LeaderboardManager.Instance != null
                         && LeaderboardManager.Instance.IsHighScore(totalScore, topN);
 

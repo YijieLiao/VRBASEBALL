@@ -114,8 +114,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Result:
-                if (viewTransition != null)
-                    viewTransition.TransitionTo(ViewTransitionManager.ViewMode.Room);
                 OnShowResult?.Invoke(lastRoundScore);
                 break;
         }

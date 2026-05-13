@@ -36,22 +36,22 @@ public class LeaderboardPanel : MonoBehaviour
     private Coroutine fadeRoutine;
     private int highlightRank = -1;
 
-    void Start()
+    void Awake()
     {
         // 按钮事件在 Inspector 里绑定，代码不重复 AddListener
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+    }
 
+    void Start()
+    {
         if (refreshOnRoomEnter)
         {
             if (GameManager.Instance != null)
                 GameManager.Instance.OnStateChanged += OnGameStateChanged;
             // 直接显示，不设 highlight
             Show(-1);
-        }
-        else
-        {
-            canvasGroup.alpha = 0f;
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
         }
     }
 
@@ -64,12 +64,16 @@ public class LeaderboardPanel : MonoBehaviour
     void OnGameStateChanged(GameState from, GameState to)
     {
         if (to == GameState.Room)
+        {
+            highlightRank = -1;
             RefreshDisplay();
+        }
     }
 
     /// <summary>highlightRank: 玩家本局排名(1-based)，-1表示不高亮</summary>
     public void Show(int highlightRank = -1)
     {
+        gameObject.SetActive(true);
         this.highlightRank = highlightRank;
         RefreshDisplay();
         FadeTo(1f);
@@ -131,6 +135,11 @@ public class LeaderboardPanel : MonoBehaviour
     {
         if (fadeRoutine != null)
             StopCoroutine(fadeRoutine);
+        if (!gameObject.activeInHierarchy)
+        {
+            canvasGroup.alpha = target;
+            return;
+        }
         fadeRoutine = StartCoroutine(FadeRoutine(target));
     }
 

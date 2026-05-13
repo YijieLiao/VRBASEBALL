@@ -24,10 +24,8 @@ public class NameInputPanel : MonoBehaviour
     private bool isVisible;
     private Coroutine fadeRoutine;
 
-    void Start()
+    void Awake()
     {
-        // 按钮事件在 Inspector 里绑定，代码不重复 AddListener（否则双击触发两次）
-
         if (keyboardManager != null)
             keyboardManager.OnSubmit += OnSubmit;
 
@@ -56,6 +54,7 @@ public class NameInputPanel : MonoBehaviour
 
     public void Show(string prompt)
     {
+        gameObject.SetActive(true);
         if (promptText != null)
             promptText.text = prompt;
         if (keyboardManager != null)
@@ -101,6 +100,11 @@ public class NameInputPanel : MonoBehaviour
     {
         if (fadeRoutine != null)
             StopCoroutine(fadeRoutine);
+        if (!gameObject.activeInHierarchy)
+        {
+            canvasGroup.alpha = target;
+            return;
+        }
         fadeRoutine = StartCoroutine(FadeRoutine(target));
     }
 
