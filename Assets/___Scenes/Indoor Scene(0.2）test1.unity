@@ -17715,6 +17715,26 @@ MonoBehaviour:
   targetPoint: {fileID: 1607543836}
   flightTime: 1
   microGravityScale: 0.03
+  groundDrag: 2
+  groundAngularDrag: 20
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  batLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  minHitSpeed: 13
+  weakHitSpeed: 4
+  fullAssistBatSpeed: 3
+  maxHitSpeed: 24
+  hitPowerMultiplier: 2.4
+  upwardBoost: 2.2
+  minBatSpeedToHit: 0.2
+  hitCooldown: 0.3
+  ignoreGroundAfterHitTime: 0.25
+  reflectionDirectionWeight: 0.25
+  minForwardDot: 0.25
+  hitJudge: {fileID: 0}
 --- !u!135 &1985800020
 SphereCollider:
   m_ObjectHideFlags: 0
