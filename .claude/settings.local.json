@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "unityMCP": {
+      "type": "http",
+      "url": "http://localhost:8080/mcp"
+    }
+  },
+  "permissions": {
+    "allow": [
+      "mcp__UnityMCP__manage_gameobject"
+    ]
+  }
+}
