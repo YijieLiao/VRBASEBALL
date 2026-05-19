@@ -19,6 +19,7 @@ public struct BallResultInfo
     public float distance;
     public int ballScore;
     public int totalScore;
+    public Vector3 worldPosition;
 }
 
 public class ClassicModeRoundManager : MonoBehaviour
@@ -213,7 +214,8 @@ public class ClassicModeRoundManager : MonoBehaviour
             result = result,
             distance = distance,
             ballScore = ballScore,
-            totalScore = totalScore
+            totalScore = totalScore,
+            worldPosition = landingPosition
         });
     }
 
@@ -229,7 +231,8 @@ public class ClassicModeRoundManager : MonoBehaviour
             result = HitResult.None,
             distance = 0f,
             ballScore = 0,
-            totalScore = totalScore
+            totalScore = totalScore,
+            worldPosition = hitJudge != null && hitJudge.homePlate != null ? hitJudge.homePlate.position : Vector3.zero
         });
     }
 
