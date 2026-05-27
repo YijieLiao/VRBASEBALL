@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioMixer mixer;
 
     private AudioSource bgmSource;
+    private AudioSource ambientSource;
     private AudioSource sfxSource2D;
 
     private const string MasterVolParam = "Master";
@@ -31,6 +32,8 @@ public class AudioManager : MonoBehaviour
 
         if (bgmSource == null)
             bgmSource = CreateSource("BGM", "Music");
+        if (ambientSource == null)
+            ambientSource = CreateSource("Ambient", "SFX");
         if (sfxSource2D == null)
             sfxSource2D = CreateSource("SFX2D", "SFX");
     }
@@ -54,11 +57,12 @@ public class AudioManager : MonoBehaviour
 
     // ==================== BGM ====================
 
-    public void PlayBGM(AudioClip clip, bool loop = true)
+    public void PlayBGM(AudioClip clip, float volume = 1f, bool loop = true)
     {
         if (clip == null) return;
         bgmSource.clip = clip;
         bgmSource.loop = loop;
+        bgmSource.volume = Mathf.Clamp01(volume);
         bgmSource.Play();
     }
 
@@ -70,12 +74,39 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip CurrentBGM => bgmSource.clip;
 
+    // ==================== Ambient 环境音 ====================
+
+    public void PlayAmbient(AudioClip clip, float volume = 1f, bool loop = true)
+    {
+        if (clip == null) return;
+        ambientSource.clip = clip;
+        ambientSource.loop = loop;
+        ambientSource.volume = Mathf.Clamp01(volume);
+        ambientSource.Play();
+    }
+
+    public void StopAmbient()
+    {
+        ambientSource.Stop();
+        ambientSource.clip = null;
+    }
+
+    public void SetAmbientVolume(float normalized)
+    {
+        ambientSource.volume = Mathf.Clamp01(normalized);
+    }
+
+    public float GetAmbientVolume()
+    {
+        return ambientSource.volume;
+    }
+
     // ==================== UI SFX (2D) ====================
 
     public void PlaySFX(AudioClip clip)
     {
         if (clip == null) return;
-        sfxSource2D.PlayOneShot(clip);
+        sfxSource2D.PlayOneShot(clip, 0.8f);
     }
 
     public void PlaySFX(AudioClip clip, float volumeScale)

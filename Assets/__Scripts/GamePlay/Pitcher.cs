@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Serialization;
+using Unity.XR.PXR;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Pitcher : MonoBehaviour
@@ -62,6 +63,25 @@ public class Pitcher : MonoBehaviour
     [Header("落点判定")]
     [Tooltip("可选的落点判定组件，用于计算安打/全垒打/出界")]
     public HitJudge hitJudge;
+
+    [Header("击球震动")]
+    [Tooltip("击中球时手柄震动强度 (0-1)")]
+    [Range(0, 1)]
+    public float hitHapticAmplitude = 1f;
+
+    [Tooltip("击中球时手柄震动时长 (ms)")]
+    public int hitHapticDurationMs = 150;
+
+    [Tooltip("击中球时手柄震动频率 (50-500 Hz)")]
+    [Range(50, 500)]
+    public int hitHapticFrequency = 200;
+
+    [Header("击球音效")]
+    [Tooltip("击中球时随机二选一播放")]
+    public AudioClip hitSFX1;
+    public AudioClip hitSFX2;
+    [Range(0, 10)]
+    public float hitSFXVolume = 1.2f;
 
     private Rigidbody rb;
     private TrailRenderer[] trailRenderers;
@@ -238,6 +258,15 @@ public class Pitcher : MonoBehaviour
         EnterFlightState();
         lastBatHitTime = Time.time;
         hitJudge?.OnBallHit();
+
+        // 手柄震动反馈
+        PXR_Input.SendHapticImpulse(PXR_Input.VibrateType.BothController,
+            hitHapticAmplitude, hitHapticDurationMs, hitHapticFrequency);
+
+        // 击球音效（随机二选一）
+        AudioClip hitClip = (Random.value < 0.5f && hitSFX2 != null) ? hitSFX2 : hitSFX1;
+        if (hitClip != null)
+            AudioManager.Instance?.PlaySFX(hitClip, hitSFXVolume);
 
         Vector3 hitDirection = GetAssistedHitDirection(collision, incomingVelocity, batVelocity);
         float exitSpeed = CalculateExitSpeed(batSpeed);

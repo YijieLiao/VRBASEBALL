@@ -106,8 +106,14 @@ public class IntroSequenceController : MonoBehaviour
     [Header("脚下标志")]
     public CanvasGroupFader footMarker;
 
+    [Header("初始面板（随 ARROW 一起显示，按 Y 渐隐）")]
+    public CanvasGroupFader[] idlePanels;
+
     [Header("自动播放")]
     public bool playOnStart = true;
+
+    [Header("初始面板（playOnStart=false 时自动显示）")]
+    public bool showPanelsWhenIdle = true;
 
     public GuideStage CurrentStage { get; private set; } = GuideStage.Idle;
 
@@ -126,10 +132,16 @@ public class IntroSequenceController : MonoBehaviour
 
     void Start()
     {
-        HideAllImmediate();
-
         if (playOnStart)
+        {
+            HideAllImmediate();
             Play();
+        }
+        else if (showPanelsWhenIdle)
+        {
+            HideAllImmediate();
+            ShowIdlePanels();
+        }
     }
 
     void Update()
@@ -140,6 +152,12 @@ public class IntroSequenceController : MonoBehaviour
         if (GetLeftPrimaryButtonDown())
         {
             SkipToGameplayScene();
+            return;
+        }
+
+        if (CurrentStage == GuideStage.Idle && GetLeftSecondaryButtonDown())
+        {
+            StartCoroutine(FadeOutIdleAndPlay());
             return;
         }
 
@@ -518,6 +536,23 @@ public class IntroSequenceController : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(gameplaySceneName))
             SceneTransitionFader.Instance.FadeToBlackThenLoad(gameplaySceneName);
+    }
+
+    private void ShowIdlePanels()
+    {
+        if (footMarker != null) footMarker.FadeIn();
+        foreach (var p in idlePanels)
+            if (p != null) p.FadeIn();
+    }
+
+    private IEnumerator FadeOutIdleAndPlay()
+    {
+        if (footMarker != null) footMarker.FadeOut();
+        foreach (var p in idlePanels)
+            if (p != null) p.FadeOut();
+
+        yield return new WaitForSeconds(0.5f);
+        Play();
     }
 
     private IEnumerator PlaySubtitleLines(string[] lines, float stayDuration, float gapDuration)

@@ -44,8 +44,11 @@ public class PicoInputManager : MonoBehaviour
         {
             RefreshDevices();
         }
+    }
 
-        // 更新上一帧状态
+    void LateUpdate()
+    {
+        // 在帧末保存按钮状态，供下一帧 GetButtonDown 使用
         prevPressedButtons.Clear();
         foreach (var btn in GetCurrentPressedButtons())
         {

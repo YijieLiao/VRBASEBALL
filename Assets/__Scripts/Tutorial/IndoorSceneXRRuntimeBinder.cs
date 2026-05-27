@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -47,6 +48,23 @@ public class IndoorSceneXRRuntimeBinder : MonoBehaviour
 
         if (interactionManager != null)
             RebindInteractionManagers(interactionManager);
+
+        StartCoroutine(RefreshInteractorsNextFrame());
+    }
+
+    // 强制 toggle NearFarInteractor 以触发重新初始化（修复场景加载后射线不可交互的问题）
+    private static IEnumerator RefreshInteractorsNextFrame()
+    {
+        yield return null; // 等一帧，确保所有 Start/OnEnable 已执行
+        yield return null; // 再等一帧
+
+        NearFarInteractor[] interactors = FindObjectsOfType<NearFarInteractor>(true);
+        foreach (var nfi in interactors)
+        {
+            nfi.gameObject.SetActive(false);
+            nfi.gameObject.SetActive(true);
+        }
+        Debug.Log($"[IndoorSceneXRRuntimeBinder] Refreshed {interactors.Length} NearFarInteractor(s).");
     }
 
     private static XRInteractionManager FindActiveInteractionManager()
@@ -56,6 +74,14 @@ public class IndoorSceneXRRuntimeBinder : MonoBehaviour
         {
             if (managers[i].gameObject.activeInHierarchy)
                 return managers[i];
+        }
+
+        // 没找到已激活的，启用第一个（确保交互系统可用）
+        if (managers.Length > 0)
+        {
+            managers[0].gameObject.SetActive(true);
+            Debug.Log("[IndoorSceneXRRuntimeBinder] Enabled inactive XRInteractionManager.", managers[0]);
+            return managers[0];
         }
 
         return null;
