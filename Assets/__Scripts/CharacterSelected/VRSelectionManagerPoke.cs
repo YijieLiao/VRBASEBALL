@@ -17,6 +17,20 @@ public class VRSelectionManagerPoke: MonoBehaviour
     public Transform uiPanelRoot;
 
     private GameObject currentSelectedDoll;
+
+    public string SelectedAnimalName
+    {
+        get
+        {
+            if (currentSelectedDoll == null) return "COW";
+            string name = currentSelectedDoll.name.ToUpper();
+            if (name.Contains("COW")) return "COW";
+            if (name.Contains("CHICK")) return "CHICK";
+            if (name.Contains("SHEEP")) return "SHEEP";
+            return "COW";
+        }
+    }
+
     private Transform currentCircle;
     private CanvasGroup currentActivePanel;
 

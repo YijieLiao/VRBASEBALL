@@ -27,6 +27,7 @@ public class ClassicModeRoundManager : MonoBehaviour
     [Header("引用")]
     [SerializeField] private Pitcher pitcher;
     [SerializeField] private HitJudge hitJudge;
+    [SerializeField] private AnimalPitcher animalPitcher;
 
     [Header("回合设置")]
     [SerializeField] private int ballsPerRound = 10;
@@ -75,6 +76,7 @@ public class ClassicModeRoundManager : MonoBehaviour
     {
         if (pitcher == null) pitcher = FindObjectOfType<Pitcher>();
         if (hitJudge == null) hitJudge = FindObjectOfType<HitJudge>();
+        if (animalPitcher == null) animalPitcher = FindObjectOfType<AnimalPitcher>();
     }
 
     void OnEnable()
@@ -115,6 +117,7 @@ public class ClassicModeRoundManager : MonoBehaviour
     public void AbortRound()
     {
         StopRoundCoroutine();
+        animalPitcher?.StopMovement();
         if (pitcher != null) pitcher.ResetBall();
         SetPhase(RoundPhase.Idle);
         OnPlayerQuit?.Invoke();
@@ -149,11 +152,20 @@ public class ClassicModeRoundManager : MonoBehaviour
 
     private IEnumerator PitchSequence()
     {
+        bool useAnimal = animalPitcher != null;
+        bool useMovement = useAnimal
+            && GameManager.Instance.CurrentMode == GameManager.GameMode.Classic;
+
         // 1. 第 N 球提示
         SetPhase(RoundPhase.Countdown);
         OnBallNumberUpdate?.Invoke(currentBall, ballsPerRound);
 
-        // 2. 倒数 3-2-1
+        // 2. 动物跑位与倒数并行
+        Coroutine moveCoroutine = null;
+        if (useMovement)
+            moveCoroutine = StartCoroutine(animalPitcher.MoveToNextPosition());
+
+        // 3. 倒数 3-2-1
         for (int i = 3; i >= 1; i--)
         {
             OnCountdownTick?.Invoke(i);
@@ -161,13 +173,24 @@ public class ClassicModeRoundManager : MonoBehaviour
         }
         OnCountdownTick?.Invoke(0);
 
-        // 3. 复位并等待一帧，然后发球
+        // 4. 等待动物到达
+        if (moveCoroutine != null)
+            yield return moveCoroutine;
+
+        // 5. 更新发球点（动画由 Pitcher.onPitch 事件自动触发）
+        if (useAnimal)
+        {
+            pitcher.SetLaunchPoint(animalPitcher.CurrentLaunchPoint);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        // 6. 发球
         SetPhase(RoundPhase.Pitching);
         pitcher.ResetBall();
         yield return null;
         pitcher.PitchBall();
 
-        // 4. 等待结果
+        // 7. 等待结果
         SetPhase(RoundPhase.WaitingResult);
         resultReceived = false;
         float timer = 0f;

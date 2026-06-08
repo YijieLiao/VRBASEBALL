@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentState => currentState;
     public GameMode CurrentMode => currentMode;
+    public string SelectedAnimalType { get; set; } = "COW";
 
     private GameState currentState = GameState.Room;
     private GameState previousState;
@@ -87,6 +88,8 @@ public class GameManager : MonoBehaviour
                 if (previousState == GameState.Pause || previousState == GameState.Batting)
                 {
                     if (roundManager != null) roundManager.AbortRound();
+                    var ap = FindObjectOfType<AnimalPitcher>();
+                    if (ap != null) ap.Cleanup();
                 }
                 currentMode = GameMode.None;
                 // 不关 Canvas —— 让 ViewTransitionManager 的渐隐协程自己管控 alpha
@@ -102,6 +105,19 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+                    // 动物投手初始化
+                    if (currentMode == GameMode.Classic || currentMode == GameMode.FreePractice)
+                    {
+                        var ap = FindObjectOfType<AnimalPitcher>();
+                        if (ap != null)
+                        {
+                            ap.Cleanup();
+                            var selMgr = FindObjectOfType<VRSelectionManagerPoke>();
+                            if (selMgr != null)
+                                SelectedAnimalType = selMgr.SelectedAnimalName;
+                            ap.Initialize(SelectedAnimalType);
+                        }
+                    }
                     // 从房间或结算页进入击球区：先激活 Canvas 再切视角，这样 Canvas 能纳入渐显
                     ActivateModeCanvas();
                     if (viewTransition != null)

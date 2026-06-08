@@ -10,7 +10,7 @@ public class ResultCoordinator : MonoBehaviour
 
     [Header("设置")]
     [SerializeField] private int topN = 10;
-    [SerializeField] private string animalName = "COW";
+    private string animalName => GameManager.Instance?.SelectedAnimalType ?? "COW";
 
     private int currentScore;
     private int currentRank;

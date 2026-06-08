@@ -83,12 +83,15 @@ public class Pitcher : MonoBehaviour
     [Range(0, 10)]
     public float hitSFXVolume = 1.2f;
 
+    public System.Action onPitch;
+
     private Rigidbody rb;
     private TrailRenderer[] trailRenderers;
     private bool isPitching = false;
     public bool IsInFlight => isPitching;
     private Vector3 customGravity;
     private float lastBatHitTime = -999f;
+    private Transform originalLaunchPoint;
 
     void Start()
     {
@@ -105,7 +108,18 @@ public class Pitcher : MonoBehaviour
             Debug.LogError("请在 Inspector 面板中分配 Launch Point 和 Target Point！");
         }
 
+        originalLaunchPoint = launchPoint;
+
         ResetBall();
+    }
+
+    public void SetLaunchPoint(Transform newPoint) => launchPoint = newPoint;
+    public void ResetLaunchPoint() => launchPoint = originalLaunchPoint;
+
+    public void SetBallVisible(bool visible)
+    {
+        var renderers = GetComponentsInChildren<Renderer>(true);
+        foreach (var r in renderers) r.enabled = visible;
     }
 
     void Update()
@@ -162,6 +176,9 @@ public class Pitcher : MonoBehaviour
     public void ResetBall()
     {
         if (launchPoint == null) return;
+
+        SetBallVisible(true);
+        onPitch?.Invoke();
 
         isPitching = false;
         lastBatHitTime = -999f;

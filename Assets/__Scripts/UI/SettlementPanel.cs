@@ -28,7 +28,7 @@ public class SettlementPanel : MonoBehaviour
     private int currentScore;
     private string playerName = "";
     private bool isHighScore;
-    private string animalName = "COW"; // 后续从选角系统传入
+    private string animalName => gameManager != null ? gameManager.SelectedAnimalType : "COW";
 
     private void Awake()
     {
