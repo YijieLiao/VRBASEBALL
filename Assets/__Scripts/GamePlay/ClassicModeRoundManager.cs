@@ -184,13 +184,17 @@ public class ClassicModeRoundManager : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
 
-        // 6. 发球
+        // 6. 应用每位置发球参数
+        if (useAnimal)
+            ApplyPitchConfig(animalPitcher.CurrentConfig);
+
+        // 7. 发球
         SetPhase(RoundPhase.Pitching);
         pitcher.ResetBall();
         yield return null;
         pitcher.PitchBall();
 
-        // 7. 等待结果
+        // 8. 等待结果
         SetPhase(RoundPhase.WaitingResult);
         resultReceived = false;
         float timer = 0f;
@@ -303,6 +307,16 @@ public class ClassicModeRoundManager : MonoBehaviour
     }
 
     // ==================== 辅助 ====================
+
+    private void ApplyPitchConfig(PitchPositionConfig config)
+    {
+        if (config == null || pitcher == null) return;
+
+        if (config.targetPoint != null)
+            pitcher.targetPoint = config.targetPoint;
+        pitcher.flightTime = config.flightTime;
+        pitcher.microGravityScale = config.gravityScale;
+    }
 
     private void SetPhase(RoundPhase newPhase)
     {

@@ -2,17 +2,9 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-/// <summary>
-/// 挂在任何 XRBaseInteractable（XRGrabInteractable / XRSimpleInteractable）物体上。
-/// 当玩家射线瞄准该物体时，通知 SubtitleHintDisplay 显示对应的提示内容。
-/// </summary>
 [RequireComponent(typeof(XRBaseInteractable))]
 public class InteractableHintTrigger : MonoBehaviour
 {
-    [Header("提示内容")]
-    [Tooltip("拖入你在 UI_SubtitleCanvas 下配置好的提示 GameObject（含 TMP 文字 + Image）。")]
-    [SerializeField] private GameObject hintContent;
-
     private XRBaseInteractable interactable;
 
     void Awake()
@@ -32,15 +24,24 @@ public class InteractableHintTrigger : MonoBehaviour
         interactable.hoverExited.RemoveListener(OnHoverExited);
     }
 
+    private static GameObject GetHintContents()
+    {
+        var xrOrigin = GameObject.Find("XR Origin");
+        if (xrOrigin == null) return null;
+
+        var container = xrOrigin.transform.Find("Camera Offset/Main Camera/UI_SubtitleCanvas/HintContents");
+        return container != null ? container.gameObject : null;
+    }
+
     private void OnHoverEntered(HoverEnterEventArgs args)
     {
-        if (hintContent != null && SubtitleHintDisplay.Instance != null)
-            SubtitleHintDisplay.Instance.Show(hintContent);
+        var hint = GetHintContents();
+        if (hint != null)
+            SubtitleHintDisplay.ShowHint(hint);
     }
 
     private void OnHoverExited(HoverExitEventArgs args)
     {
-        if (SubtitleHintDisplay.Instance != null)
-            SubtitleHintDisplay.Instance.Hide();
+        SubtitleHintDisplay.HideHint();
     }
 }

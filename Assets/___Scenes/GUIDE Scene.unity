@@ -11018,6 +11018,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3271223807658053190, guid: 5d7027d2c2ee76f42a00d23869201b4d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5444242107777950247, guid: 5d7027d2c2ee76f42a00d23869201b4d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6959429039488665197, guid: 5d7027d2c2ee76f42a00d23869201b4d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8915303544610554457, guid: 5d7027d2c2ee76f42a00d23869201b4d, type: 3}
       propertyPath: m_Name
       value: XR Origin

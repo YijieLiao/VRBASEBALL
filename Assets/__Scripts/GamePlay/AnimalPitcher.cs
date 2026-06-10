@@ -1,6 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class PitchPositionConfig
+{
+    [Tooltip("动物站位")]
+    public Transform standPosition;
+
+    [Tooltip("此位置的落点（为空则沿用 Pitcher 上的默认落点）")]
+    public Transform targetPoint;
+
+    [Tooltip("球飞行时间，越大弧线越高")]
+    public float flightTime = 1.8f;
+
+    [Tooltip("微重力倍率，越小下坠越慢")]
+    public float gravityScale = 1f;
+}
 
 public class AnimalPitcher : MonoBehaviour
 {
@@ -19,15 +36,28 @@ public class AnimalPitcher : MonoBehaviour
     [SerializeField] private Transform homePlate;
     [SerializeField] private Transform defaultPosition;
 
+    [Header("发球位置配置")]
+    [SerializeField] private PitchPositionConfig[] pitchConfigs;
+
+    [Header("动物音效（发球时随机播放）")]
+    [SerializeField] private AudioClip[] cowSounds;
+    [SerializeField] private AudioClip[] chickSounds;
+    [SerializeField] private AudioClip[] sheepSounds;
+
     private string animalType;
     private GameObject animalInstance;
     private Animator animator;
-    private Transform[] positions;
     private Transform launchPointAnchor;
+    private int currentConfigIndex;
     private List<int> unusedIndices;
     private Coroutine moveCoroutine;
 
     public Transform CurrentLaunchPoint => launchPointAnchor;
+    public Vector3 AnimalPosition => animalInstance != null ? animalInstance.transform.position : transform.position;
+    public Transform AnimalTransform => animalInstance != null ? animalInstance.transform : null;
+    public PitchPositionConfig CurrentConfig =>
+        pitchConfigs != null && currentConfigIndex < pitchConfigs.Length
+            ? pitchConfigs[currentConfigIndex] : null;
 
     public void Initialize(string type)
     {
@@ -65,20 +95,21 @@ public class AnimalPitcher : MonoBehaviour
         anchor.transform.localPosition = anchorOffset;
         launchPointAnchor = anchor.transform;
 
-        ReadPositionsFromScene();
-
         var pitcher = FindObjectOfType<Pitcher>();
 
         bool isClassic = GameManager.Instance != null
             && GameManager.Instance.CurrentMode == GameManager.GameMode.Classic;
 
-        if (isClassic && positions.Length > 0)
+        bool hasConfigs = pitchConfigs != null && pitchConfigs.Length > 0;
+
+        if (isClassic && hasConfigs)
         {
-            unusedIndices = new List<int>(positions.Length);
-            for (int i = 0; i < positions.Length; i++)
+            unusedIndices = new List<int>(pitchConfigs.Length);
+            for (int i = 0; i < pitchConfigs.Length; i++)
                 unusedIndices.Add(i);
 
-            animalInstance.transform.position = positions[0].position;
+            currentConfigIndex = 0;
+            animalInstance.transform.position = pitchConfigs[0].standPosition.position;
             unusedIndices.RemoveAt(0);
         }
         else if (defaultPosition != null)
@@ -103,36 +134,21 @@ public class AnimalPitcher : MonoBehaviour
         FaceHomePlate();
     }
 
-    private void ReadPositionsFromScene()
-    {
-        GameObject container = GameObject.Find("PitcherPositions");
-        if (container == null)
-        {
-            positions = new Transform[0];
-            return;
-        }
-
-        int count = container.transform.childCount;
-        positions = new Transform[count];
-        for (int i = 0; i < count; i++)
-            positions[i] = container.transform.GetChild(i);
-    }
-
     public IEnumerator MoveToNextPosition()
     {
-        if (positions.Length == 0)
+        if (pitchConfigs == null || pitchConfigs.Length == 0)
             yield break;
 
         if (unusedIndices.Count == 0)
         {
-            for (int i = 0; i < positions.Length; i++)
+            for (int i = 0; i < pitchConfigs.Length; i++)
                 unusedIndices.Add(i);
         }
 
-        int pick = unusedIndices[0];
+        currentConfigIndex = unusedIndices[0];
         unusedIndices.RemoveAt(0);
 
-        Vector3 target = positions[pick].position;
+        Vector3 target = pitchConfigs[currentConfigIndex].standPosition.position;
 
         if (animator != null)
             animator.CrossFade("Run", 0.1f);
@@ -174,6 +190,24 @@ public class AnimalPitcher : MonoBehaviour
     {
         if (animator != null)
             animator.SetTrigger("Attack");
+
+        PlayRandomSound();
+    }
+
+    private void PlayRandomSound()
+    {
+        AudioClip[] clips = animalType switch
+        {
+            "CHICK" => chickSounds,
+            "SHEEP" => sheepSounds,
+            _       => cowSounds
+        };
+
+        if (clips == null || clips.Length == 0) return;
+
+        int idx = UnityEngine.Random.Range(0, clips.Length);
+        if (clips[idx] != null)
+            AudioManager.Instance?.PlaySFX(clips[idx], 1f);
     }
 
     public void Cleanup()
@@ -192,7 +226,7 @@ public class AnimalPitcher : MonoBehaviour
         animalInstance = null;
         animator = null;
         launchPointAnchor = null;
-        positions = null;
+        currentConfigIndex = 0;
         unusedIndices = null;
     }
 

@@ -18,7 +18,6 @@ public class DerbyScoreboard : MonoBehaviour
     [SerializeField] private string foulFormat = "界外";
     [SerializeField] private string missFormat = "未击中";
     [SerializeField] private string roundEndFormat = "本局结束!";
-    [SerializeField] private string countdownGoFormat = "等待击球";
     [SerializeField] private string comboFormat = "连击 {0}  ×{1:F1}";
     [SerializeField] private string comboIdleFormat = "";
     [SerializeField] private string maxComboFormat = "本局最高连击: {0}";
@@ -43,7 +42,6 @@ public class DerbyScoreboard : MonoBehaviour
         if (roundManager == null) return;
         roundManager.OnBallResult += OnBallResult;
         roundManager.OnBallNumberUpdate += OnBallNumberUpdate;
-        roundManager.OnCountdownTick += OnCountdownTick;
         roundManager.OnRoundEnded += OnRoundEnded;
         roundManager.OnComboChanged += OnComboChanged;
     }
@@ -53,7 +51,6 @@ public class DerbyScoreboard : MonoBehaviour
         if (roundManager == null) return;
         roundManager.OnBallResult -= OnBallResult;
         roundManager.OnBallNumberUpdate -= OnBallNumberUpdate;
-        roundManager.OnCountdownTick -= OnCountdownTick;
         roundManager.OnRoundEnded -= OnRoundEnded;
         roundManager.OnComboChanged -= OnComboChanged;
     }
@@ -75,14 +72,6 @@ public class DerbyScoreboard : MonoBehaviour
             lastResultText.text = "";
 
         Show();
-    }
-
-    private void OnCountdownTick(int tick)
-    {
-        if (tick > 0 && lastResultText != null)
-            lastResultText.text = tick.ToString();
-        else if (tick == 0 && lastResultText != null)
-            lastResultText.text = countdownGoFormat;
     }
 
     private void OnBallResult(BallResultInfo info)

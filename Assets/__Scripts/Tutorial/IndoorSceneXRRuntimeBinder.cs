@@ -126,4 +126,5 @@ public class IndoorSceneXRRuntimeBinder : MonoBehaviour
         for (int i = 0; i < groups.Length; i++)
             groups[i].interactionManager = interactionManager;
     }
+
 }
